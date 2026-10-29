@@ -1194,23 +1194,9 @@
       <div id="newsList" class="hidden"></div>
     </div>
 
-    <!-- 6) Attendance log -->
-    <div class="section-block">
-      <div class="section-header"><span class="section-number">6</span><h3>سجل الغياب</h3></div>
-      <button class="btn-outline schedule-btn" id="attendanceShowBtn" onclick="toggleAttendanceList()">عرض</button>
-      <div id="attendanceLogList" class="hidden"></div>
-    </div>
-
-    <!-- 7) Results reports -->
-    <div class="section-block">
-      <div class="section-header"><span class="section-number">7</span><h3>تقارير النتائج</h3></div>
-      <button class="btn-outline schedule-btn" id="docsShowBtn" onclick="toggleDocsList()">عرض</button>
-      <div class="doc-list hidden" id="docList"></div>
-    </div>
-
-    <!-- 8) Tuition fees — hidden entirely unless the student has a fee record -->
+    <!-- 6) Tuition fees — hidden entirely unless the student has a fee record -->
     <div class="section-block hidden" id="feesSection">
-      <div class="section-header"><span class="section-number">8</span><h3>الرسوم الدراسية</h3></div>
+      <div class="section-header"><span class="section-number">6</span><h3>الرسوم الدراسية</h3></div>
       <div class="info-card">
         <div class="info-row"><div class="label">مبلغ الرسوم المستحق</div><div class="value" id="feesAmount">—</div></div>
         <div class="info-row"><div class="label">حالة السداد</div><div class="value" id="feesStatus">—</div></div>
@@ -2133,10 +2119,6 @@
     renderMonzara(student.guardianCivilId);
     document.getElementById('newsList').classList.add('hidden');
     document.getElementById('newsShowBtn').textContent = 'عرض';
-    document.getElementById('attendanceLogList').classList.add('hidden');
-    document.getElementById('attendanceShowBtn').textContent = 'عرض';
-    document.getElementById('docList').classList.add('hidden');
-    document.getElementById('docsShowBtn').textContent = 'عرض';
     document.getElementById('mapBox').classList.add('hidden');
     document.getElementById('mapShowBtn').textContent = '🗺️ عرض الخريطة';
     document.getElementById('mapImg').removeAttribute('src');
@@ -2145,7 +2127,6 @@
     currentPortalUsername = student.portalUsername || '';
     renderPortalStatus(payload.portalStatus);
     renderNews(payload.news);
-    renderAttendanceLog(payload.attendance);
     if(payload.scheduleUrl !== undefined){
       currentScheduleUrl = payload.scheduleUrl || '';
     }else{
@@ -2157,9 +2138,10 @@
     }
 
 
+    // قسما "سجل الغياب" و"تقارير النتائج" أُزيلا من اللوحة (متوفران في تطبيق ولي الأمر)
     const list = document.getElementById('docList');
-    list.innerHTML = '';
-    (student.docs || DEMO_DOCS).forEach(doc => {
+    if(list) list.innerHTML = '';
+    if(list) (student.docs || DEMO_DOCS).forEach(doc => {
       const row = document.createElement('div');
       row.className = 'doc-item' + (doc.available ? '' : ' unavailable');
       row.innerHTML = `

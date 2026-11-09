@@ -1095,6 +1095,15 @@
 
     <!-- 2) Residential data -->
     <div class="section-block" id="resSection">
+      <!-- بيانات الطالب المختصرة: تظهر فقط في رابط تعديل الحي السكني (?mode=sakan) -->
+      <div class="res-only-show">
+        <div class="section-header"><h3>بيانات الطالب</h3></div>
+        <div class="info-card" style="margin-bottom:18px;">
+          <div class="info-row"><div class="label">اسم الطالب</div><div class="value" id="rName">—</div></div>
+          <div class="info-row"><div class="label">الصف</div><div class="value" id="rGrade">—</div></div>
+          <div class="info-row"><div class="label">الشعبة</div><div class="value" id="rSection">—</div></div>
+        </div>
+      </div>
       <div class="section-header"><span class="section-number">2</span><h3>البيانات السكنية المسجلة</h3></div>
       <div class="info-card">
         <div class="info-row"><div class="label">الحي السكني</div><div class="value"><span id="dNeighborhoodDisplay">—</span><span class="done-badge hidden" id="residentialDoneBadge">(تم التعديل)</span></div></div>
@@ -2122,6 +2131,9 @@
     document.getElementById('dEnrollment').textContent = student.enrollmentStatus;
     document.getElementById('dGrade').textContent = student.grade;
     document.getElementById('dSection').textContent = student.section;
+    document.getElementById('rName').textContent = student.name || '—';
+    document.getElementById('rGrade').textContent = student.grade || '—';
+    document.getElementById('rSection').textContent = student.section || '—';
     document.getElementById('dGuardianName').textContent = student.guardianName || 'غير مسجل';
     document.getElementById('dGuardianCivilId').textContent = student.guardianCivilId || 'غير مسجل';
     document.getElementById('dGuardianNationality').textContent = student.guardianNationality || 'غير مسجل';

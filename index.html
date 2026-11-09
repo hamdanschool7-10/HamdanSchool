@@ -284,6 +284,16 @@
     font-size:13.5px; line-height:1.8; text-align:right;
   }
   .login-announce .ic{ font-size:18px; line-height:1.4; }
+  /* رابط تعديل الحي السكني فقط: ?mode=sakan */
+  body.res-only #dashView > .section-block:not(#resSection),
+  body.res-only #dashView .login-announce,
+  body.res-only .add-home-link,
+  body.res-only .remember-me-row,
+  body.res-only .install-banner,
+  body.res-only #resSection .section-number{ display:none !important; }
+  body.res-only .res-only-hide{ display:none !important; }
+  .res-only-show{ display:none; }
+  body.res-only .res-only-show{ display:block; }
   .login-announce b{ color:#9a5b00; }
   .notice-link{
     display:inline-block;
@@ -897,9 +907,13 @@
     </div>
     <div class="title-divider"><span></span></div>
 
-    <div class="form-intro">
+    <div class="form-intro res-only-hide">
       <h2>بوابة أولياء الأمور</h2>
       <p>أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض بياناته</p>
+    </div>
+    <div class="form-intro res-only-show">
+      <h2>تعديل الحي السكني</h2>
+      <p>أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض الحي السكني المسجل وطلب تعديله</p>
     </div>
 
     <div class="card">
@@ -945,7 +959,7 @@
       <button class="submit-btn" id="submitAddStudentBtn" style="display:none;" onclick="submitAddStudentRequest()">تقديم الطلب</button>
       <a class="back-link" id="cancelAddStudentLink" style="display:none;" onclick="cancelAddStudentRequest()">‹ رجوع لتسجيل الدخول</a>
     </div>
-    <a class="teacher-entry-link" onclick="showTeacherLoginView()">دخول المشرفين</a>
+    <a class="teacher-entry-link res-only-hide" onclick="showTeacherLoginView()">دخول المشرفين</a>
     <p class="footer-rights">تصميم أ.عبدالله الشكيلي . أخصائي أنظمة مدرسية</p>
   </div>
 
@@ -1041,7 +1055,8 @@
       <p class="school-sub">(٧-١٠) صباحي</p>
     </div>
     <div class="title-divider"><span></span></div>
-    <p class="form-intro-title">بوابة أولياء الأمور</p>
+    <p class="form-intro-title res-only-hide">بوابة أولياء الأمور</p>
+    <p class="form-intro-title res-only-show">تعديل الحي السكني</p>
 
     <div class="login-announce" role="note">
       <span class="ic">📢</span>
@@ -1079,7 +1094,7 @@
     </div>
 
     <!-- 2) Residential data -->
-    <div class="section-block">
+    <div class="section-block" id="resSection">
       <div class="section-header"><span class="section-number">2</span><h3>البيانات السكنية المسجلة</h3></div>
       <div class="info-card">
         <div class="info-row"><div class="label">الحي السكني</div><div class="value"><span id="dNeighborhoodDisplay">—</span><span class="done-badge hidden" id="residentialDoneBadge">(تم التعديل)</span></div></div>
@@ -1364,6 +1379,7 @@
 
   /** يُستدعى بعد أول عرض للوحة الطالب — بعد ما شاف ولي الأمر فايدة الموقع فعليًا */
   function maybeShowInstallBanner(){
+    if(typeof RES_ONLY_MODE !== 'undefined' && RES_ONLY_MODE) return; // رابط تعديل الحي السكني: بدون إضافة للشاشة الرئيسية
     const banner = document.getElementById('installBanner');
     if(!banner || isStandaloneApp() || !isMobileDevice() || installBannerDismissedRecently()) return;
 
@@ -1412,6 +1428,14 @@
 </script>
 <script>
   // رابط الخادم الوسيط (Google Apps Script) المتصل بجدول بيانات الطلاب الحقيقي
+  // رابط خاص لتعديل الحي السكني فقط: https://hamdanschool7-10.github.io/HamdanSchool/?mode=sakan
+  //  (نفس تسجيل الدخول ونفس الطلب، ويصل لنفس ورقة "طلبات تعديل البيانات السكنية")
+  const RES_ONLY_MODE = new URLSearchParams(location.search).get('mode') === 'sakan';
+  if (RES_ONLY_MODE) {
+    document.body.classList.add('res-only');
+    document.title = 'تعديل الحي السكني — مدرسة الشيخ حمدان بن خميس اليوسفي';
+  }
+
   const API_URL = 'https://script.google.com/macros/s/AKfycbzPolN6mIPMhLNCVm2TzfYbYaqzli3VJY0fRYPLTf0OCP4PnQoNo7G3mSPSa4jkBNdbpw/exec';
 
   /**
@@ -1592,6 +1616,7 @@
 
   /** يحاول الدخول تلقائيًا ببيانات محفوظة على هذا الجهاز — بصمت، بدون رسائل خطأ لو فشل */
   async function tryAutoLogin(){
+    if(RES_ONLY_MODE) return; // رابط تعديل الحي السكني: بدون "تذكّرني" ولا دخول تلقائي
     const saved = getRememberedLogin();
     if(!saved) return;
     prefillLoginForm(saved);
@@ -1710,7 +1735,9 @@
 
     const rememberBox = document.getElementById('rememberMe');
     let rememberSaveFailed = false;
-    if(silent || (rememberBox && rememberBox.checked)){
+    if(RES_ONLY_MODE){
+      // رابط تعديل الحي السكني: لا نحفظ ولا نمسح بيانات "تذكّرني" الخاصة بالبوابة الأساسية
+    }else if(silent || (rememberBox && rememberBox.checked)){
       const saved = saveRememberedLogin(civilId, dob); // نجدّد مدة الـ٣٠ يوم مع كل استخدام
       rememberSaveFailed = !saved;
     }else{
@@ -2846,7 +2873,7 @@
     document.getElementById('dobMonth').value = '';
     document.getElementById('dobYear').value = '';
     document.getElementById('rememberMe').checked = false;
-    clearRememberedLogin();
+    if(!RES_ONLY_MODE) clearRememberedLogin();
     document.getElementById('errorBox').style.display = 'none';
     document.getElementById('lockBox').style.display = 'none';
     document.getElementById('addStudentPrompt').style.display = 'none';

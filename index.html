@@ -285,12 +285,46 @@
   }
   .login-announce .ic{ font-size:18px; line-height:1.4; }
   /* رابط تعديل الحي السكني فقط: ?mode=sakan */
-  body.res-only #dashView > .section-block:not(#resSection),
+  body.res-only #dashView > .section-block:not(.mode-target):not(#modeStudentCard),
   body.res-only #dashView .login-announce,
   body.res-only .add-home-link,
   body.res-only .remember-me-row,
   body.res-only .install-banner,
-  body.res-only #resSection .section-number{ display:none !important; }
+  body.res-only .mode-target .section-number{ display:none !important; }
+  .mode-only{ display:none; }
+  body.res-only .mode-target.mode-only{ display:block; }
+
+  /* ---------- استبانات تطوير الأداء ---------- */
+  .sv-intro{ font-size:13.5px; line-height:1.9; color:var(--ink-soft); margin:0 2px 12px; }
+  .sv-scale{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 14px; font-size:12px; }
+  .sv-scale span{ background:var(--gold-soft); color:var(--gold-deep); border-radius:20px; padding:2px 10px; font-weight:600; }
+  .sv-item{ background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:12px 12px 10px; margin-bottom:10px; transition:border-color .2s, box-shadow .2s; }
+  .sv-item.missing{ border-color:var(--danger); box-shadow:0 0 0 2px var(--danger-bg); }
+  .sv-q{ margin:0 0 10px; font-size:14px; line-height:1.8; font-weight:600; color:var(--ink); display:flex; gap:8px; }
+  .sv-n{ flex:0 0 auto; min-width:24px; height:24px; border-radius:50%; background:var(--gold); color:#fff; font-size:12px; display:inline-flex; align-items:center; justify-content:center; margin-top:2px; }
+  .sv-opts{ display:grid; grid-template-columns:repeat(5,1fr); gap:5px; }
+  .sv-opts label{ position:relative; cursor:pointer; }
+  .sv-opts input{ position:absolute; opacity:0; pointer-events:none; }
+  .sv-opts span{ display:flex; align-items:center; justify-content:center; text-align:center; min-height:40px; padding:4px 2px; border:1.5px solid var(--line); border-radius:10px; background:#fff; font-size:11.5px; line-height:1.3; font-weight:600; color:var(--ink); transition:all .15s; }
+  .sv-opts input:checked + span{ background:var(--gold); border-color:var(--gold); color:#fff; }
+  .sv-opts input:focus-visible + span{ outline:2px solid var(--gold-deep); outline-offset:1px; }
+  .sv-progress{ position:sticky; top:0; z-index:5; background:var(--paper); padding:8px 0 10px; margin-bottom:6px; }
+  .sv-progress .bar{ height:7px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .sv-progress .bar i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#14876e,#1a62a8); transition:width .25s; }
+  .sv-progress p{ margin:5px 0 0; font-size:12.5px; color:var(--ink-soft); text-align:center; }
+  .sv-text{ width:100%; min-height:110px; resize:vertical; border:1.5px solid var(--line); border-radius:var(--radius); background:#fff; padding:10px 12px; font-family:var(--sans); font-size:14px; line-height:1.7; box-sizing:border-box; }
+  .sv-text.missing{ border-color:var(--danger); }
+  .sv-count{ font-size:12px; color:var(--ink-soft); text-align:left; margin:4px 2px 12px; }
+  .sv-done{ background:#e8f4ef; border:1.5px solid #14876e; color:#0e5c4b; border-radius:var(--radius); padding:16px; text-align:center; font-weight:700; line-height:1.9; }
+  .sv-branch{ margin-bottom:12px; }
+  .sv-branch-btn{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; border-radius:var(--radius);
+    border:1.5px solid var(--gold); background:#fff; color:var(--gold-deep); font-family:var(--sans); font-weight:700; font-size:15px; cursor:pointer; text-align:right; }
+  .sv-branch-btn .st{ font-size:12px; font-weight:700; border-radius:20px; padding:2px 10px; background:var(--gold-soft); color:var(--gold-deep); white-space:nowrap; }
+  .sv-branch-btn .st.ok{ background:#e8f4ef; color:#0e5c4b; }
+  .sv-branch-btn.open{ background:var(--gold); color:#fff; }
+  .sv-branch > div:not(.hidden){ margin-top:12px; }
+  .sv-closed{ background:var(--danger-bg); color:var(--danger); border-radius:var(--radius); padding:14px; text-align:center; font-weight:600; }
+  @media (max-width:380px){ .sv-opts span{ font-size:10.5px; min-height:44px; } }
   body.res-only .res-only-hide{ display:none !important; }
   .res-only-show{ display:none; }
   body.res-only .res-only-show{ display:block; }
@@ -912,8 +946,8 @@
       <p>أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض بياناته</p>
     </div>
     <div class="form-intro res-only-show">
-      <h2>تعديل الحي السكني</h2>
-      <p>أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض الحي السكني المسجل وطلب تعديله</p>
+      <h2 id="modeLoginTitle">تعديل الحي السكني</h2>
+      <p id="modeLoginSub">أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض الحي السكني المسجل وطلب تعديله</p>
     </div>
 
     <div class="card">
@@ -1056,7 +1090,7 @@
     </div>
     <div class="title-divider"><span></span></div>
     <p class="form-intro-title res-only-hide">بوابة أولياء الأمور</p>
-    <p class="form-intro-title res-only-show">تعديل الحي السكني</p>
+    <p class="form-intro-title res-only-show" id="modeDashTitle">تعديل الحي السكني</p>
 
     <div class="login-announce" role="note">
       <span class="ic">📢</span>
@@ -1093,17 +1127,18 @@
       </div>
     </div>
 
+    <!-- بيانات الطالب المختصرة: تظهر فقط في الروابط الخاصة (?mode=...) -->
+    <div class="section-block res-only-show" id="modeStudentCard">
+      <div class="section-header"><h3>بيانات الطالب</h3></div>
+      <div class="info-card">
+        <div class="info-row"><div class="label">اسم الطالب</div><div class="value" id="rName">—</div></div>
+        <div class="info-row"><div class="label">الصف</div><div class="value" id="rGrade">—</div></div>
+        <div class="info-row"><div class="label">الشعبة</div><div class="value" id="rSection">—</div></div>
+      </div>
+    </div>
+
     <!-- 2) Residential data -->
     <div class="section-block" id="resSection">
-      <!-- بيانات الطالب المختصرة: تظهر فقط في رابط تعديل الحي السكني (?mode=sakan) -->
-      <div class="res-only-show">
-        <div class="section-header"><h3>بيانات الطالب</h3></div>
-        <div class="info-card" style="margin-bottom:18px;">
-          <div class="info-row"><div class="label">اسم الطالب</div><div class="value" id="rName">—</div></div>
-          <div class="info-row"><div class="label">الصف</div><div class="value" id="rGrade">—</div></div>
-          <div class="info-row"><div class="label">الشعبة</div><div class="value" id="rSection">—</div></div>
-        </div>
-      </div>
       <div class="section-header"><span class="section-number">2</span><h3>البيانات السكنية المسجلة</h3></div>
       <div class="info-card">
         <div class="info-row"><div class="label">الحي السكني</div><div class="value"><span id="dNeighborhoodDisplay">—</span><span class="done-badge hidden" id="residentialDoneBadge">(تم التعديل)</span></div></div>
@@ -1216,6 +1251,20 @@
       <div class="section-header"><span class="section-number">5</span><h3>المستجدات</h3></div>
       <button class="btn-outline schedule-btn" id="newsShowBtn" onclick="toggleNewsList()">عرض</button>
       <div id="newsList" class="hidden"></div>
+    </div>
+
+    <!-- استبانات تطوير الأداء (ولي الأمر + الطالب) — تظهر فقط في رابط الاستبانات ?mode=istibana ، ولا تظهر في البوابة الأساسية -->
+    <div class="section-block mode-only" id="surveysSection">
+      <div class="section-header"><h3>استبانات تطوير الأداء</h3></div>
+      <p class="sv-intro" style="text-align:center">استبانتان قصيرتان: الأولى لولي الأمر والثانية للطالب. اختر الاستبانة ثم اضغط «إرسال» في آخرها.</p>
+      <div class="sv-branch">
+        <button class="sv-branch-btn" id="parentSurveyShowBtn" onclick="toggleSurvey('parent')"></button>
+        <div id="parentSurveyBody" class="hidden"></div>
+      </div>
+      <div class="sv-branch">
+        <button class="sv-branch-btn" id="studentSurveyShowBtn" onclick="toggleSurvey('student')"></button>
+        <div id="studentSurveyBody" class="hidden"></div>
+      </div>
     </div>
 
     <!-- 6) Tuition fees — hidden entirely unless the student has a fee record -->
@@ -1439,10 +1488,25 @@
   // رابط الخادم الوسيط (Google Apps Script) المتصل بجدول بيانات الطلاب الحقيقي
   // رابط خاص لتعديل الحي السكني فقط: https://hamdanschool7-10.github.io/HamdanSchool/?mode=sakan
   //  (نفس تسجيل الدخول ونفس الطلب، ويصل لنفس ورقة "طلبات تعديل البيانات السكنية")
-  const RES_ONLY_MODE = new URLSearchParams(location.search).get('mode') === 'sakan';
-  if (RES_ONLY_MODE) {
+  // روابط خاصة تعرض قسمًا واحدًا فقط بعد الدخول (بدون "تذكّرني" ولا الإضافة للشاشة الرئيسية):
+  //   ?mode=sakan     → تعديل الحي السكني
+  //   ?mode=istibana  → استبانتا تطوير الأداء (ولي الأمر + الطالب) بعد إدخال الرقم المدني وتاريخ ميلاد الطالب
+  const PAGE_MODES = {
+    sakan:    { target: 'resSection', title: 'تعديل الحي السكني',
+                sub: 'أدخل الرقم المدني وتاريخ ميلاد الطالب لعرض الحي السكني المسجل وطلب تعديله' },
+    istibana: { target: 'surveysSection', title: 'استبانات تطوير الأداء',
+                sub: 'أدخل الرقم المدني وتاريخ ميلاد الطالب لتعبئة استبانة ولي الأمر واستبانة الطالب' },
+  };
+  PAGE_MODES.talib = PAGE_MODES.istibana; // الرابط القديم يفتح نفس الصفحة
+  const PAGE_MODE = PAGE_MODES[new URLSearchParams(location.search).get('mode')] || null;
+  const RES_ONLY_MODE = !!PAGE_MODE; // (الاسم قديم: يعني "رابط خاص بقسم واحد")
+  if (PAGE_MODE) {
     document.body.classList.add('res-only');
-    document.title = 'تعديل الحي السكني — مدرسة الشيخ حمدان بن خميس اليوسفي';
+    document.title = PAGE_MODE.title + ' — مدرسة الشيخ حمدان بن خميس اليوسفي';
+    document.getElementById(PAGE_MODE.target).classList.add('mode-target');
+    document.getElementById('modeLoginTitle').textContent = PAGE_MODE.title;
+    document.getElementById('modeLoginSub').textContent = PAGE_MODE.sub;
+    document.getElementById('modeDashTitle').textContent = PAGE_MODE.title;
   }
 
   const API_URL = 'https://script.google.com/macros/s/AKfycbzPolN6mIPMhLNCVm2TzfYbYaqzli3VJY0fRYPLTf0OCP4PnQoNo7G3mSPSa4jkBNdbpw/exec';
@@ -2116,6 +2180,189 @@
     adminClasses = []; adminClassStudentsCache = {};
   }
 
+
+  /* ======================== استبانات تطوير الأداء ========================
+   * نفس بنود استمارات موقع الوزارة (استبانات تطوير الأداء) وبنفس ترقيم التقييم:
+   * 1 متميز، 2 جيد، 3 ملائم، 4 غير ملائم، 5 يحتاج إلى تدخل
+   * الردود تُحفظ في ورقتي "استبانة آراء أولياء الأمور" و"استبانة آراء الطلبة".
+   */
+  const SURVEY_SCALE = ['متميز', 'جيد', 'ملائم', 'غير ملائم', 'يحتاج إلى تدخل'];
+  const SURVEY_DEFS = {
+    parent: {
+      body: 'parentSurveyBody',
+      intro: 'عزيزي ولي الأمر، رأيك يساعدنا على تطوير مدرستنا. اختر التقييم الذي يعبّر عن رأيك في كل عبارة، ثم اكتب مقترحاتك واضغط «إرسال». تُرسل الاستبانة مرة واحدة فقط.',
+      suggestLabel: 'المقترحات',
+      items: ["تعزز المدرسة مهارات التعلم الذاتي لدى ابني/ ابنتي.", "تنمي المدرسة مهارات التعلم التعاوني لدى ابني/ ابنتي.", "يطبق ابني/ ابنتي مهارات التفكير في حل المشكلات التي تواجهه.", "يوظف ابني/ ابنتي ما تعلمه بالمدرسة في حياته اليومية.", "يوظف ابني/ ابنتي التقنيات الحديثة في تعلمه.", "يساعد المعلمون ابني/ ابنتي على إجادة المهارات الأساسية (القراءة والكتابة والحساب).", "يقدم المعلمون تغذية راجعة مناسبة على الأعمال الموكلة لابني/ ابنتي (واجبات، مشاريع، بحوث، أخرى).", "تسهم المدرسة بشكل إيجابي في تعزيز القيم الدينية والأخلاقية والاجتماعية لابني/ ابنتي.", "تنمي المدرسة لدى ابني/ ابنتي الشعور بالولاء والانتماء والاعتزاز بالهوية العمانية.", "تشجع المدرسة ابني/ ابنتي على العمل التطوعي.", "تنمي المدرسة لدى ابني/ ابنتي حرية التعبير وإبداء الرأي.", "تعزز المدرسة لدى ابني/ ابنتي السلوك الصحي والإيجابي تجاه نفسه وبيئته.", "تشجع المدرسة ابني/ ابنتي على طرح الأفكار، وتنفيذ مشاريع ريادة الأعمال.", "توفر المدرسة لابني/ ابنتي بيئة تعليمية آمنة ونظيفة ومحفزة للتعلم.", "توفر المدرسة وسيلة نقل آمنة ومريحة لابني/ ابنتي.", "توفر لابني/ ابنتي مصادر تعلم متنوعة تلبي احتياجاته وميوله.", "تشجع المدرسة ابني/ ابنتي على المشاركة في الأنشطة الرياضية، والثقافية والاجتماعية وغيرها.", "تراعي المدرسة الجوانب النفسية والاجتماعية والجسدية بما يعزز شعور ابني/ ابنتي بالأمان.", "يحرص الأخصائي الاجتماعي والنفسي على رعاية ابني/ ابنتي وإرشاده وتوجيهه.", "تهتم المدرسة برعاية ذوي الإعاقة/ الاحتياجات الخاصة (صعوبات التعلم، الدمج الفكري، الدمج السمعي ...الخ).", "تساعد المدرسة ابني/ ابنتي على اتخاذ قرارات سليمة حول مستقبله بما يتوافق مع قدراته وميوله.", "تدعم المدرسة ابني/ ابنتي في اختيار مساره الأكاديمي بما يتوافق مع قدراته وميوله.", "تنمي المدرسة مهارات البحث العلمي لدى ابني/ ابنتي وتبرز نتاجاته.", "تشاركني المدرسة في إعداد رؤية ورسالة المدرسة، وتنفيذ خطتها.", "تتيح المدرسة فرصاً مناسبة لابني/ ابنتي في تحسين تعلمهم.", "تخطرني المدرسة بغياب ابني/ ابنتي منذ بداية الحصة الأولى.", "أحرص على التواصل المباشر والمستمر مع المدرسة.", "تظهر المدرسة اهتماماً بزيارتي، وتأخذ بآرائي ومقترحاتي.", "تسعى المدرسة إلى توظيف خبرات ومهارات أولياء الأمور في برامجها المختلفة.", "تطلعني المدرسة باستمرار على الأنظمة واللوائح والقوانين والمستجدات التربوية."],
+    },
+    student: {
+      body: 'studentSurveyBody',
+      intro: 'هذه الاستبانة بلسان الطالب: اختر التقييم الذي يعبّر عن رأي الطالب في كل عبارة، ثم اكتب المقترحات واضغط «إرسال». تُرسل الاستبانة مرة واحدة فقط.',
+      suggestLabel: 'مقترحاتي لتطوير مدرستي',
+      items: ["أشعر بالرضا عن درجاتي ومستواي التحصيلي في مختلف المواد الدراسية.", "أستوعب دروسي في نهاية الحصص استيعاباً جيداً.", "أنفذ طرق متنوعة ومختلفة للتعلم الذاتي (كالتحضير قبل الحصص والبحث في مصادر التعلم والانترنت).", "أستطيع تطبيق ما تعلمته من مهارات خلال الحصص في حياتي اليومية.", "أوظف التقنيات الحديثة في المدرسة، وفي المنزل لرفع مستواي التحصيلي.", "ألتزم باللوائح والأنظمة المدرسية.", "أشارك بحماس مع زملائي في تنفيذ برامج الأنشطة المدرسية.", "تأخذ المدرسة بآرائي ومقترحاتي التطويرية.", "أشارك مع زملائي في العمل التطوعي داخل المدرسة وخارجها.", "أشارك مع زملائي في التعبير عن قضايا البيئة والمناخ.", "أشارك بفاعلية في المبادرات وطرح الأفكار.", "ينفذ المعلمون طرائق تدريسية مشوقة ومحفزة باستمرار.", "يربط المعلمون بين المواد الدراسية المختلفة، وبالحياة أثناء الشرح.", "يقدم المعلمون أسئلة محفزة للتفكير، والاطلاع والبحث والنقاش.", "يحرص المعلمون على إشراكي في تعلمي واكسابي مهارات مختلفة للتعلم.", "يقدم المعلمون ملاحظات تساعدني عند تصحيح أعمالي المدرسية.", "يكلفني المعلمون بأنشطة صفية ولاصفية هادفة ومناسبة لقدراتي.", "تنفذ مدرستي خطة الإخلاء.", "تتوفر في المدرسة وسائل نقل آمنة ومريحة للطلبة.", "تقدم الجمعية التعاونية وجبات صحية للطلبة.", "تهتم المدرسة بنظافة المرافق ودورات المياه وبرادات مياه الشرب.", "تفعّل المدرسة مرافقها المختلفة لخدمة تعلمي، وتنمية مهاراتي مثل (غرفة مصادر التعلم، غرفة الحاسوب، المختبرات، غرفة التوجيه المهني، وغيرها).", "تحرص مدرستي على عرض مواهب وإنجازات الطلبة في ممرات المدرسة.", "يساندني الأخصائي الاجتماعي والنفسي في حل مشكلاتي الدراسية والشخصية.", "تدعم المدرسة ذوي الإعاقة/ الاحتياجات الخاصة.", "يساندني المعلمون في تخطي التحديات التي تواجه تعلمي في مختلف المواد الدراسية.", "تساندني المدرسة في اختيار مساري الأكاديمي بما يتوافق مع قدراتي ومهاراتي.", "أشعر بالأمان داخل المدرسة.", "تشجعني المدرسة على البحث والاطلاع وعرض نتاجاتي البحثية داخل المدرسة وخارجها.", "تشركني المدرسة في بناء رؤيتها ورسالتها، وخطتها التشغيلية، وتنفيذها.", "تشرك المدرسة ولي أمري في تحسين مستواي التحصيلي والسلوكي.", "تتابع المدرسة انتظامي وانضباطي وفق لائحة شؤون الطلبة وتخطر ولي أمري."],
+    },
+  };
+  let surveyStatus = {};
+  const SURVEY_LABELS = { parent: '١) استبانة آراء ولي الأمر', student: '٢) استبانة آراء الطالب' };
+  function updateSurveyBtn(type){
+    const btn = document.getElementById(type + 'SurveyShowBtn');
+    const box = document.getElementById(SURVEY_DEFS[type].body);
+    if(!btn) return;
+    const open = !box.classList.contains('hidden');
+    btn.classList.toggle('open', open);
+    btn.innerHTML = '<span>' + SURVEY_LABELS[type] + '</span>' +
+      (surveyStatus[type] ? '<span class="st ok">✅ تم الإرسال</span>' : '<span class="st">' + (open ? 'إخفاء' : 'تعبئة') + '</span>');
+  }
+
+  function surveyDraftKey(type){ return 'svDraft_' + type + '_' + (currentCivilId || ''); }
+  function loadSurveyDraft(type){
+    try{ return JSON.parse(localStorage.getItem(surveyDraftKey(type)) || 'null'); }catch(e){ return null; }
+  }
+  function saveSurveyDraft(type){
+    try{
+      const box = document.getElementById(SURVEY_DEFS[type].body);
+      const answers = SURVEY_DEFS[type].items.map((_, i) => {
+        const c = box.querySelector('input[name="sv_' + type + '_' + i + '"]:checked');
+        return c ? Number(c.value) : 0;
+      });
+      const t = box.querySelector('.sv-text');
+      localStorage.setItem(surveyDraftKey(type), JSON.stringify({ answers, text: t ? t.value : '' }));
+    }catch(e){}
+  }
+  function clearSurveyDraft(type){ try{ localStorage.removeItem(surveyDraftKey(type)); }catch(e){} }
+
+  function renderSurvey(type){
+    const def = SURVEY_DEFS[type];
+    const box = document.getElementById(def.body);
+    if(!box) return;
+    if(surveyStatus[type]){
+      box.innerHTML = '<div class="sv-done">✅ شكرًا لكم — تم استلام الاستبانة.<br><span style="font-weight:500">نقدّر وقتكم ومشاركتكم في تطوير المدرسة.</span></div>';
+      return;
+    }
+    if(surveyStatus.open === false){
+      box.innerHTML = '<div class="sv-closed">استقبال الاستبانة متوقف حاليًا.</div>';
+      return;
+    }
+    const draft = loadSurveyDraft(type) || {};
+    const ans = draft.answers || [];
+    let html = '<p class="sv-intro">' + escapeHtml(def.intro) + '</p>';
+    html += '<div class="sv-progress"><div class="bar"><i id="svBar_' + type + '"></i></div><p id="svProg_' + type + '"></p></div>';
+    def.items.forEach((q, i) => {
+      html += '<div class="sv-item" id="svItem_' + type + '_' + i + '"><p class="sv-q"><span class="sv-n">' + (i + 1) + '</span><span>' + escapeHtml(q) + '</span></p><div class="sv-opts">';
+      SURVEY_SCALE.forEach((label, k) => {
+        const v = k + 1;
+        html += '<label><input type="radio" name="sv_' + type + '_' + i + '" value="' + v + '"' + (ans[i] === v ? ' checked' : '') + '><span>' + label + '</span></label>';
+      });
+      html += '</div></div>';
+    });
+    html += '<div class="section-header" style="margin-top:14px"><h3>' + escapeHtml(def.suggestLabel) + ' <span style="color:var(--danger)">*</span></h3></div>';
+    html += '<textarea class="sv-text" maxlength="1000" placeholder="اكتب مقترحاتك هنا (أو اكتب: لا يوجد)"></textarea>';
+    html += '<p class="sv-count"><span class="sv-len">0</span> / 1000</p>';
+    if(isAdminSession){
+      html += '<p class="notice-box" style="display:block">وضع الاطلاع فقط (حساب مسؤول) — الاستبانة يعبّئها ولي الأمر أو الطالب.</p>';
+    }else{
+      html += '<button class="submit-btn" id="svSubmit_' + type + '" onclick="submitSurvey(\'' + type + '\')">إرسال الاستبانة</button>';
+    }
+    box.innerHTML = html;
+    const ta = box.querySelector('.sv-text');
+    ta.value = draft.text || '';
+    const len = box.querySelector('.sv-len');
+    const upd = () => { len.textContent = ta.value.length; };
+    upd();
+    ta.addEventListener('input', () => { upd(); ta.classList.remove('missing'); saveSurveyDraft(type); });
+    box.addEventListener('change', e => {
+      if(e.target && e.target.type === 'radio'){
+        const item = e.target.closest('.sv-item');
+        if(item) item.classList.remove('missing');
+        updateSurveyProgress(type);
+        saveSurveyDraft(type);
+      }
+    });
+    updateSurveyProgress(type);
+  }
+
+  function updateSurveyProgress(type){
+    const def = SURVEY_DEFS[type];
+    const box = document.getElementById(def.body);
+    const n = box.querySelectorAll('.sv-opts input:checked').length;
+    const bar = document.getElementById('svBar_' + type);
+    const p = document.getElementById('svProg_' + type);
+    if(bar) bar.style.width = Math.round(n / def.items.length * 100) + '%';
+    if(p) p.textContent = 'تمت الإجابة على ' + n + ' من ' + def.items.length;
+  }
+
+  function toggleSurvey(type){
+    const def = SURVEY_DEFS[type];
+    const box = document.getElementById(def.body);
+    const willShow = box.classList.contains('hidden');
+    box.classList.toggle('hidden', !willShow);
+    if(willShow) renderSurvey(type);
+    updateSurveyBtn(type);
+    if(willShow) document.getElementById(type + 'SurveyShowBtn').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /** يُستدعى من showDashboard: يجهّز قسمي الاستبانة حسب حالة الطالب */
+  function setupSurveys(payload){
+    surveyStatus = payload.surveys || {};
+    if(!(PAGE_MODE && PAGE_MODE.target === 'surveysSection')) return; // البوابة الأساسية: بدون استبانات
+    ['parent', 'student'].forEach(type => {
+      const box = document.getElementById(SURVEY_DEFS[type].body);
+      box.classList.add('hidden');
+      box.innerHTML = '';
+      updateSurveyBtn(type);
+    });
+  }
+
+  async function submitSurvey(type){
+    const def = SURVEY_DEFS[type];
+    const box = document.getElementById(def.body);
+    const answers = [];
+    let firstMissing = null;
+    def.items.forEach((_, i) => {
+      const c = box.querySelector('input[name="sv_' + type + '_' + i + '"]:checked');
+      answers.push(c ? Number(c.value) : 0);
+      if(!c){
+        const el = document.getElementById('svItem_' + type + '_' + i);
+        el.classList.add('missing');
+        if(!firstMissing) firstMissing = el;
+      }
+    });
+    const ta = box.querySelector('.sv-text');
+    const text = ta.value.trim();
+    if(firstMissing){
+      firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert('الرجاء الإجابة على جميع العبارات (العبارات غير المجاب عليها مظللة باللون الأحمر).');
+      return;
+    }
+    if(!text){
+      ta.classList.add('missing');
+      ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert('الرجاء كتابة المقترحات (ويمكنك كتابة: لا يوجد).');
+      return;
+    }
+    const btn = document.getElementById('svSubmit_' + type);
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+    let data;
+    try{
+      // محاولة واحدة فقط — حتى لا يتكرر الإرسال عند بطء الشبكة
+      data = await callApi(Object.assign({ action: 'submitSurvey', type, answers, suggestion: text }, studentAuth()), 1);
+    }catch(err){
+      btn.disabled = false; btn.textContent = label;
+      alert('تعذّر الاتصال بالخادم. تأكد من اتصال الإنترنت وحاول مرة أخرى.');
+      return;
+    }
+    if(!data.ok && !data.alreadySent){
+      btn.disabled = false; btn.textContent = label;
+      alert(data.error || 'تعذّر إرسال الاستبانة. حاول مرة أخرى.');
+      return;
+    }
+    surveyStatus[type] = true;
+    clearSurveyDraft(type);
+    renderSurvey(type);
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateSurveyBtn(type);
+  }
+
   function showDashboard(payload){
     const student = payload.student;
     const dashCrest = document.getElementById('dashCrest');
@@ -2166,6 +2413,7 @@
     currentPortalUsername = student.portalUsername || '';
     renderPortalStatus(payload.portalStatus);
     renderNews(payload.news);
+    setupSurveys(payload);
     if(payload.scheduleUrl !== undefined){
       currentScheduleUrl = payload.scheduleUrl || '';
     }else{
